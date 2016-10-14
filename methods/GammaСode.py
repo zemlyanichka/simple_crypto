@@ -21,14 +21,18 @@ class GammaСode(BasicClass):
             gamma = gamma[:len_of_message:]
         return gamma
 
+    def change_zero_c(self, lst):
+        for i, j in enumerate(lst):
+            if j == 0:
+                lst[i] += len(self.alphabet)
+        return lst
+
     def encode(self):
         gamma = self.correct_gamma_length(self.message, self.key)
         t = self.search_coordinates_of_letters(self.alphabet, self.message)
         g = self.search_coordinates_of_letters(self.alphabet, gamma)
         t_plus_g_mod_n = (t + g) % len(self.alphabet)
-        for i, j in enumerate(t_plus_g_mod_n):
-            if j==0:
-                t_plus_g_mod_n[i] += len(self.alphabet)
+        t_plus_g_mod_n = self.change_zero_c(t_plus_g_mod_n)
         encoded = self.search_letters_by_coordinates(t_plus_g_mod_n, self.alphabet)
         return encoded
 
@@ -37,8 +41,6 @@ class GammaСode(BasicClass):
         c = self.search_coordinates_of_letters(self.alphabet, encoded_message)
         g = self.search_coordinates_of_letters(self.alphabet, gamma)
         c_minus_g_mod_n = (c - g) % len(self.alphabet)
-        for i, j in enumerate(c_minus_g_mod_n):
-            if j==0:
-                c_minus_g_mod_n[i] += len(self.alphabet)
+        c_minus_g_mod_n = self.change_zero_c(c_minus_g_mod_n)
         decoded = self.search_letters_by_coordinates(c_minus_g_mod_n, self.alphabet)
         return decoded
